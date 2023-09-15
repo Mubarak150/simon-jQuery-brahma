@@ -1,5 +1,3 @@
-
-
 var allColorsArray = ["green", "red", "yellow", "blue"];  // an array that contains all colors 
 var  randomChosenArray = [];
 var userChosenArray = [];
@@ -108,6 +106,5 @@ function playAgain () {
             nextLevel();
             inProgress = true;  
         }
-
     });
 }
