@@ -1,22 +1,26 @@
-// main () { ....
-//declaring an array that contains all colors 
-var allColorsArray = ["green", "red", "yellow", "blue"];
+
+
+var allColorsArray = ["green", "red", "yellow", "blue"];  // an array that contains all colors 
 var  randomChosenArray = [];
 var userChosenArray = [];
 
-// when the game is not started yet. 
+// controlling variables.. prevents level up with click when game is in progress. 
 var level = 0; 
+var started = true; 
+var startedAgain = false; 
+var inProgress = false; 
 
+// with fresh reload. 
 $("#level-title").text("press any key to start");
-$(document).keypress(function(){
-$("#level-title").text("Level "+ level);
-nextLevel ();        
+$(document).keypress(function(){ 
+    if (started) {
+        $("#level-title").text("Level "+ level);
+        nextLevel (); 
+        started  = false; 
+    }  
 })
 
-// step 2
 //blick a button upon user click 
-//and push the id of it to an array. 
-// check if the entry is correct or not. 
 $(".btn").click(function() {
     $(this).fadeOut().fadeIn();
     var userChosenColor = $(this).attr("id");
@@ -27,7 +31,7 @@ $(".btn").click(function() {
 });
 
 
-/////////////////////////////////////////////////////my functions//////////////////////////////////////////////////////////
+///////////////////////////////////////////////////  my functions  //////////////////////////////////////////////////////////
 function playSound(name) {
     var audio = new Audio("sounds/" + name + ".mp3");
     audio.play();
@@ -75,13 +79,20 @@ function nextLevel () {
 }
 
 function gameOver () {
+    startedAgain = true;
+    inProgress = false; 
     $("body").css("background-color", "red");
     var audio1 = new Audio("sounds/wrong.mp3");
     audio1.play();
     $(".btn").addClass("disabled");
     $(".wait-play").css("visibility", "hidden");
     $("#level-title").text("Game Over... press a key for re-game");
-    $(document).keypress(playAgain);
+    $(document).keypress(function() {
+        if (startedAgain) {
+            playAgain ();
+            startedAgain = false; 
+        }
+    });
 }
 
 function playAgain () {
@@ -92,7 +103,11 @@ function playAgain () {
     userChosenArray = [];
     $("#level-title").text("Press any key to start"); // Reset the level title
     $(document).keypress(function () {
-        $("#level-title").text("Level " + level);
-        nextLevel();
+        if (!inProgress) {
+            $("#level-title").text("Level " + level);
+            nextLevel();
+            inProgress = true;  
+        }
+
     });
 }
